@@ -28,7 +28,7 @@ export class FirebaseAppService {
   async verify(token: string | null) {
     const user = await this.defaultApps
       .auth()
-      .verifyIdToken(token.replace('Bearer', ''));
+      .verifyIdToken(token.replace('Bearer', '').trim());
 
     return user;
   }
