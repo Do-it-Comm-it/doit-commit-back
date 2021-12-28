@@ -1,5 +1,5 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { FirebaseAppService } from './auth.service';
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
@@ -15,13 +15,14 @@ export class AuthMiddleware implements NestMiddleware {
   }
 
   //PROCESS: verify the firebase bearer token by use() method.
-  use(req: any, res: any, next: () => void) {
-    const token: string | null = req.headers.authorization;
-    if (token != null && token.length > 0) {
+  use(req: Request, res: Response, next: () => void) {
+    const token: string = req.cookies.session;
+    if (token.length > 0) {
       this.firebaseApp
-        .verify(token)
+        .verifySessionCookie(token)
         .then(async (decodedToken) => {
           const user = {
+            uid: decodedToken.uid,
             email: decodedToken.email,
           };
           req['user'] = user;

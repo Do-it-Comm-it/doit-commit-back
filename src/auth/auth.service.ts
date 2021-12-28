@@ -32,4 +32,16 @@ export class FirebaseAppService {
 
     return user;
   }
+
+  async createCookie(token: string | null) {
+    return this.defaultApps
+      .auth()
+      .createSessionCookie(token.replace('Bearer', '').trim(), {
+        expiresIn: 60 * 60 * 24 * 5 * 1000,
+      });
+  }
+
+  async verifySessionCookie(sessionCookie: string) {
+    return this.defaultApps.auth().verifySessionCookie(sessionCookie, true);
+  }
 }

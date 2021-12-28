@@ -6,7 +6,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('user')
+@Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
   id?: number;
@@ -43,4 +43,13 @@ export class User {
 
   @UpdateDateColumn()
   updated?: Date;
+}
+
+export interface ResponseSaveUser {
+  uid: string;
+  nickname?: string;
+  email?: string;
+  image?: string;
+  tech?: string[];
+  position?: string;
 }

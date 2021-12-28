@@ -17,16 +17,22 @@ export class AuthController {
       const decodedToken = await this.firebaseApp.verify(token);
 
       try {
-        const user = await this.userService.getUser(decodedToken.uid);
+        let user = await this.userService.getUser(decodedToken.uid);
 
         if (!user) {
-          await this.userService.signUp({
+          user = await this.userService.signUp({
             email: decodedToken.email,
             image: decodedToken.picture,
             uid: decodedToken.uid,
           });
         }
-
+        const sessionCookie = await this.firebaseApp.createCookie(token);
+        const options = {
+          maxAge: 60 * 60 * 24 * 5 * 1000,
+          httpOnly: true,
+          secure: true,
+        };
+        response.cookie('session', sessionCookie, options);
         return response.status(HttpStatus.OK).json({
           user,
         });
