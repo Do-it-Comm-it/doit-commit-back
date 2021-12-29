@@ -33,6 +33,7 @@ export class AuthMiddleware implements NestMiddleware {
           this.accessDenied(req.url, res);
         });
     } else {
+      //TODO: check cookie disble and delete cookie and logout.
       this.accessDenied(req.url, res);
     }
   }
