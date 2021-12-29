@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   Req,
   Res,
 } from '@nestjs/common';
@@ -22,6 +23,22 @@ export class UsersController {
     return response.status(HttpStatus.OK).json({
       user,
     });
+  }
+
+  @Put()
+  async putUser(
+    @Req() request,
+    @Res() response,
+    @Body() user: ResponseSaveUser,
+  ) {
+    const result = await this.userService.saveUser(request.user.uid, user);
+    if (result.affected > 0) {
+      return response.status(HttpStatus.OK).json({
+        affected: result.affected,
+      });
+    } else {
+      return response.status(HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Get('/me')
